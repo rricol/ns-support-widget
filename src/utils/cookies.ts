@@ -19,3 +19,41 @@ export function deleteCookie(name: string, path: string = "/"): void {
   // Set the cookie's expiration date to a time in the past to delete it
   document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=${path}; Secure; SameSite=Strict`;
 }
+
+export function removeSupportQueryParam() {
+  const urlParams = new URLSearchParams(window.location.search);
+
+  if (urlParams.has("support")) {
+    urlParams.delete("support");
+    const params = urlParams.toString();
+    const newUrl = params === "" ? window.location.pathname : `${window.location.pathname}?${params}`;
+    window.history.replaceState(null, "", newUrl);
+
+    // Optionally update the URL if necessary
+    if (window.location.href !== newUrl) {
+      window.location.href = newUrl;
+    }
+  }
+}
+
+export function initiateLocalStorage(): void {
+  if (!localStorage.getItem("__Support-ns")) {
+    localStorage.setItem("__Support-ns", "false");
+  }
+}
+
+export function getLocalStorage(): string | null {
+  return localStorage.getItem("__Support-ns");
+}
+
+export function removeLocalStorage(): void {
+  localStorage.removeItem("__Support-ns");
+}
+
+export function updateLocalStorage(): void {
+  if (localStorage.getItem("__Support-ns") === "true") {
+    localStorage.setItem("__Support-ns", "false");
+  } else {
+    localStorage.setItem("__Support-ns", "true");
+  }
+}
